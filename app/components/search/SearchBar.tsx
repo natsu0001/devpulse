@@ -12,7 +12,7 @@ const SearchBar = () => {
   return (
     <div className="flex w-full max-w-2xl gap-3">
       <input
-      
+      data-ascii-text
         type="text"
         value={username}
         onChange={(event) => setUsername(event.target.value)}

@@ -38,7 +38,7 @@ export default function Home() {
           </div>
 
           <div className="mt-8 w-full flex justify-center">
-            <SearchBar data-ascii-text />
+            <SearchBar/>
           </div>
         </section>
 
