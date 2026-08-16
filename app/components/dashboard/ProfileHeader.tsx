@@ -1,39 +1,41 @@
+import { dummyUser } from "@/data/dummy";
+
 const ProfileHeader = () => {
   return (
     <section className="border border-border bg-surface p-6">
-      <div className="flex items-center gap-5">
-        {/* Avatar */}
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
         <div className="flex h-20 w-20 shrink-0 items-center justify-center border border-border-strong bg-surface-hover text-2xl font-semibold">
-          T
+          {dummyUser.name.charAt(0)}
         </div>
 
-        {/* Profile information */}
         <div>
           <p className="text-sm text-text-muted">
-            GitHub Profile
+            @{dummyUser.username}
           </p>
 
           <h2
             data-ascii-text
-            className="mt-1 text-2xl font-semibold tracking-tight"
+            className="mt-1 text-2xl font-semibold"
           >
-            torvalds
+            {dummyUser.name}
           </h2>
 
           <p
             data-ascii-text
-            className="mt-1 text-sm text-text-secondary"
+            className="mt-2 max-w-xl text-sm leading-6 text-text-secondary"
           >
-            Linus Torvalds
+            {dummyUser.bio}
           </p>
 
-          <p
-            data-ascii-text
-            className="mt-3 max-w-xl text-sm leading-6 text-text-muted"
-          >
-            Creator of Linux and Git. Software engineer
-            and open source developer.
-          </p>
+          <div className="mt-4 flex flex-wrap gap-4 text-xs text-text-muted">
+            <span>
+              {dummyUser.location}
+            </span>
+
+            <span>
+              {dummyUser.company || "Independent"}
+            </span>
+          </div>
         </div>
       </div>
     </section>
