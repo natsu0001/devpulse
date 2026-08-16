@@ -1,29 +1,56 @@
 @import "tailwindcss";
 
 :root {
+  /* Background */
   --background: #09090b;
   --foreground: #fafafa;
 
-  --muted: #a1a1aa;
-  --border: rgba(255, 255, 255, 0.1);
+  /* Surfaces */
+  --surface: #0f0f11;
+  --surface-hover: #141416;
 
-  --primary: #ffffff;
-  --primary-muted: rgba(255, 255, 255, 0.6);
+  /* Text */
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
 
-  --surface: rgba(255, 255, 255, 0.05);
-  --surface-hover: rgba(255, 255, 255, 0.1);
+  /* Borders */
+  --border: #27272a;
+  --border-subtle: #18181b;
+  --border-strong: #3f3f46;
+
+  /* Accent */
+  --accent: #ffffff;
+  --accent-muted: #d4d4d8;
+
+  /* Radius */
+  --radius: 0px;
 }
 
 @theme inline {
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-}
 
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent: var(--accent);
+
+  /* Sharp UI */
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+}
 
 * {
   box-sizing: border-box;
@@ -48,4 +75,26 @@ a {
 button,
 input {
   font: inherit;
+}
+
+.diagonal-bg {
+  background-image: repeating-linear-gradient(
+    315deg,
+    var(--border) 0,
+    var(--border) 1px,
+    transparent 1px,
+    transparent 50%
+  );
+  background-size: 8px 8px;
+}
+
+.diagonal-bg-subtle {
+  background-image: repeating-linear-gradient(
+    315deg,
+    var(--border-subtle) 0,
+    var(--border-subtle) 1px,
+    transparent 1px,
+    transparent 50%
+  );
+  background-size: 8px 8px;
 }
