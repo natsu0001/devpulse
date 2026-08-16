@@ -16,12 +16,12 @@ const SearchBar = () => {
         value={username}
         onChange={(event) => setUsername(event.target.value)}
         placeholder="Search GitHub username..."
-        className="h-11 flex-1 rounded-lg border border-white/10 bg-white/5 px-4 text-sm outline-none placeholder:text-white/40 focus:border-white/20"
+        className="h-11 flex-1  border border-white/10 bg-white/5 px-4 text-sm outline-none placeholder:text-white/40 focus:border-white/20"
       />
 
       <button
         onClick={handleSearch}
-        className="h-11 rounded-lg bg-white px-5 text-sm font-medium text-black transition-opacity hover:opacity-80"
+        className="h-11  bg-white px-5 text-sm font-medium text-black transition-opacity hover:opacity-80"
       >
         Search
       </button>
