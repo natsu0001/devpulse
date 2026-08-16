@@ -7,10 +7,51 @@ import Dashboard from "@/app/components/dashboard/Dashboard";
 import LoadingSkeleton from "@/app/components/ui/LoadingSkeleton";
 import ErrorState from "@/app/components/ui/ErrorState";
 
+import { getGitHubUser } from "@/lib/github";
+
+import type {
+  GitHubDashboardData,
+} from "@/types/github";
+
 export default function Home() {
-  const [status, setStatus] = useState<
-    "success" | "loading" | "error"
-  >("success");
+  const [data, setData] =
+    useState<GitHubDashboardData | null>(
+      null
+    );
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState<string | null>(null);
+
+  const handleSearch = async (
+    username: string
+  ) => {
+    if (!username.trim()) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result =
+        await getGitHubUser(
+          username.trim()
+        );
+
+      setData(result);
+    } catch (error) {
+      setData(null);
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -18,8 +59,6 @@ export default function Home() {
 
       <div className="relative z-10">
         <Navbar />
-
-        {/* Search */}
 
         <section className="mx-auto flex w-full max-w-7xl flex-col items-center px-6 py-12">
           <div className="text-center">
@@ -41,65 +80,39 @@ export default function Home() {
               data-ascii-text
               className="mx-auto mt-4 max-w-xl text-sm leading-6 text-text-secondary"
             >
-              Search for a GitHub user and explore
-              their repositories, activity, languages,
-              and developer statistics.
+              Search for a GitHub user and
+              explore their repositories,
+              activity, languages, and
+              developer statistics.
             </p>
           </div>
 
           <div className="mt-8 w-full max-w-xl">
-            <SearchBar />
+            <SearchBar
+              onSearch={handleSearch}
+              loading={loading}
+            />
           </div>
         </section>
 
-        {/* Dashboard state */}
-
-        {status === "loading" && (
+        {loading && (
           <LoadingSkeleton />
         )}
 
-        {status === "error" && (
+        {!loading && error && (
           <ErrorState
-            onRetry={() =>
-              setStatus("success")
-            }
+            message={error}
+            onRetry={() => {
+              setError(null);
+            }}
           />
         )}
 
-        {status === "success" && (
-          <Dashboard />
-        )}
-
-        {/* TEMP DEV CONTROLS */}
-
-        <div className="fixed bottom-5 left-5 z-50 flex border border-border bg-surface">
-          <button
-            onClick={() =>
-              setStatus("success")
-            }
-            className="border-r border-border px-3 py-2 text-xs hover:bg-surface-hover"
-          >
-            Success
-          </button>
-
-          <button
-            onClick={() =>
-              setStatus("loading")
-            }
-            className="border-r border-border px-3 py-2 text-xs hover:bg-surface-hover"
-          >
-            Loading
-          </button>
-
-          <button
-            onClick={() =>
-              setStatus("error")
-            }
-            className="px-3 py-2 text-xs hover:bg-surface-hover"
-          >
-            Error
-          </button>
-        </div>
+        {!loading &&
+          !error &&
+          data && (
+            <Dashboard data={data} />
+          )}
       </div>
     </main>
   );

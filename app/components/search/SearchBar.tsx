@@ -1,32 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
-const SearchBar = () => {
-  const [username, setUsername] = useState("");
+type SearchBarProps = {
+  onSearch: (
+    username: string
+  ) => void;
 
-  const handleSearch = () => {
-    console.log("Searching for:", username);
+  loading?: boolean;
+};
+
+const SearchBar = ({
+  onSearch,
+  loading = false,
+}: SearchBarProps) => {
+  const [username, setUsername] =
+    useState("");
+
+  const handleSubmit = (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    onSearch(username);
   };
 
   return (
-    <div className="flex w-full max-w-2xl gap-3">
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full"
+    >
       <input
       data-ascii-text
-        type="text"
         value={username}
-        onChange={(event) => setUsername(event.target.value)}
-        placeholder="Search GitHub username..."
-        className="h-11 flex-1  border border-white/10 bg-white/5 px-4 text-sm outline-none placeholder:text-white/40 focus:border-white/20"
+        onChange={(event) =>
+          setUsername(
+            event.target.value
+          )
+        }
+        placeholder="Enter GitHub username..."
+        disabled={loading}
+        className="h-12 min-w-0 flex-1 border border-border bg-surface px-4 text-sm outline-none placeholder:text-text-muted focus:border-border-strong disabled:opacity-50"
       />
 
       <button
-        onClick={handleSearch}
-        className="h-11  bg-white px-5 text-sm font-medium text-black transition-opacity hover:opacity-80"
+        type="submit"
+        disabled={
+          loading ||
+          !username.trim()
+        }
+        className="h-12 border-y border-r border-border bg-surface px-6 text-sm transition-colors hover:bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Search
+        {loading
+          ? "Searching..."
+          : "Search"}
       </button>
-    </div>
+    </form>
   );
 };
 

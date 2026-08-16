@@ -7,10 +7,13 @@ type RepositoryCardProps = {
 const RepositoryCard = ({
   repository,
 }: RepositoryCardProps) => {
+  const updatedDate =
+    new Date(
+      repository.updatedAt
+    ).toLocaleDateString();
+
   return (
     <article className="group bg-surface p-6 transition-colors hover:bg-surface-hover">
-      {/* Header */}
-
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3
@@ -25,16 +28,12 @@ const RepositoryCard = ({
           </p>
         </div>
 
-        {/* Visibility */}
-
         <span className="shrink-0 border border-border px-2 py-1 text-[10px] uppercase tracking-wider text-text-muted">
           {repository.isPrivate
             ? "Private"
             : "Public"}
         </span>
       </div>
-
-      {/* Footer */}
 
       <div className="mt-6 flex flex-wrap items-center gap-5 text-xs text-text-muted">
         <span className="flex items-center gap-2">
@@ -43,15 +42,17 @@ const RepositoryCard = ({
         </span>
 
         <span>
-          ★ {repository.stars.toLocaleString()}
+          ★{" "}
+          {repository.stars.toLocaleString()}
         </span>
 
         <span>
-          Forks {repository.forks.toLocaleString()}
+          Forks{" "}
+          {repository.forks.toLocaleString()}
         </span>
 
         <span className="ml-auto">
-          Updated {repository.updatedAt}
+          Updated {updatedDate}
         </span>
       </div>
     </article>
