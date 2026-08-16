@@ -4,6 +4,8 @@ import ProfileHeader from "./ProfileHeader";
 import StatsCard from "./StatsCard";
 
 import RepositoryCard from "@/app/components/repositories/RepositoryCard";
+import LanguageChart from "@/app/components/charts/LanguageChart";
+import ActivityChart from "@/app/components/charts/ActivityChart";
 
 const Dashboard = () => {
   return (
@@ -56,32 +58,15 @@ const Dashboard = () => {
       </div>
 
       {/* Charts */}
+<div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border lg:grid-cols-2">
+  <div className="min-h-80 bg-surface p-6">
+    <LanguageChart />
+  </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border lg:grid-cols-2">
-        <div className="min-h-80 bg-surface p-6">
-          <p className="text-sm text-text-muted">
-            Languages
-          </p>
-
-          <div className="flex h-64 items-center justify-center">
-            <span className="text-xs uppercase tracking-wider text-text-muted">
-              Language chart
-            </span>
-          </div>
-        </div>
-
-        <div className="min-h-80 bg-surface p-6">
-          <p className="text-sm text-text-muted">
-            Activity
-          </p>
-
-          <div className="flex h-64 items-center justify-center">
-            <span className="text-xs uppercase tracking-wider text-text-muted">
-              Activity chart
-            </span>
-          </div>
-        </div>
-      </div>
+  <div className="min-h-80 bg-surface p-6">
+    <ActivityChart />
+  </div>
+</div>
 
       {/* Repositories */}
 
