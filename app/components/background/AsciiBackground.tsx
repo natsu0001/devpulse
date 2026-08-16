@@ -6,8 +6,16 @@ const CHARACTERS = " .·:*+xX#@";
 
 const CELL_SIZE = 18;
 const MOUSE_RADIUS = 220;
+const TEXT_RADIUS = 45;
 
-const AsciiBackground = () => {
+type TextRect = {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+};
+
+export default function AsciiBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -21,107 +29,262 @@ const AsciiBackground = () => {
 
     let width = 0;
     let height = 0;
-    let animationFrame = 0;
     let time = 0;
+    let animationFrame = 0;
 
     const mouse = {
       x: -1000,
       y: -1000,
     };
 
+    let textRects: TextRect[] = [];
+
+    // -----------------------------
+    // Get text positions
+    // -----------------------------
+
+    const updateTextRects = () => {
+      const elements =
+        document.querySelectorAll<HTMLElement>(
+          "[data-ascii-text]"
+        );
+
+      textRects = Array.from(elements).map((element) => {
+        const rect = element.getBoundingClientRect();
+
+        return {
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+        };
+      });
+    };
+
+    // -----------------------------
+    // Resize canvas
+    // -----------------------------
+
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
 
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
+      width = window.innerWidth;
+      height = window.innerHeight;
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
 
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+      );
+
+      updateTextRects();
     };
+
+    // -----------------------------
+    // Mouse
+    // -----------------------------
 
     const handleMouseMove = (event: MouseEvent) => {
       mouse.x = event.clientX;
       mouse.y = event.clientY;
     };
 
-    const isExcluded = (x: number, y: number) => {
-      const elements =
-        document.querySelectorAll("[data-ascii-exclude]");
+    // -----------------------------
+    // Distance from point to text
+    // -----------------------------
 
-      for (const element of elements) {
-        const rect = element.getBoundingClientRect();
+    const getTextInfluence = (
+      x: number,
+      y: number
+    ) => {
+      let strongestInfluence = 0;
 
-        if (
-          x >= rect.left &&
-          x <= rect.right &&
-          y >= rect.top &&
-          y <= rect.bottom
-        ) {
-          return true;
+      for (const rect of textRects) {
+        const closestX = Math.max(
+          rect.left,
+          Math.min(x, rect.right)
+        );
+
+        const closestY = Math.max(
+          rect.top,
+          Math.min(y, rect.bottom)
+        );
+
+        const dx = x - closestX;
+        const dy = y - closestY;
+
+        const distance = Math.sqrt(
+          dx * dx + dy * dy
+        );
+
+        if (distance < TEXT_RADIUS) {
+          const influence =
+            1 - distance / TEXT_RADIUS;
+
+          strongestInfluence = Math.max(
+            strongestInfluence,
+            influence
+          );
         }
       }
 
-      return false;
+      return strongestInfluence;
     };
+
+    // -----------------------------
+    // Animation
+    // -----------------------------
 
     const animate = () => {
       time += 0.015;
 
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
 
       ctx.font = `${CELL_SIZE}px monospace`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      const columns = Math.ceil(width / CELL_SIZE);
-      const rows = Math.ceil(height / CELL_SIZE);
+      const columns = Math.ceil(
+        width / CELL_SIZE
+      );
 
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < columns; x++) {
-          const px = x * CELL_SIZE;
-          const py = y * CELL_SIZE;
+      const rows = Math.ceil(
+        height / CELL_SIZE
+      );
 
-          /*
-           * Don't draw ASCII inside
-           * protected content areas.
-           */
-          if (isExcluded(px, py)) {
-            continue;
+      for (let row = 0; row < rows; row++) {
+        for (
+          let column = 0;
+          column < columns;
+          column++
+        ) {
+          const baseX =
+            column * CELL_SIZE;
+
+          const baseY =
+            row * CELL_SIZE;
+
+          // -----------------------------
+          // Base fluid field
+          // -----------------------------
+
+          let wave =
+            Math.sin(
+              column * 0.18 + time
+            );
+
+          wave +=
+            Math.sin(
+              row * 0.13 -
+                time * 1.3
+            );
+
+          wave +=
+            Math.sin(
+              (column + row) *
+                0.08 +
+                time * 0.7
+            );
+
+          wave =
+            (wave + 3) / 6;
+
+          // -----------------------------
+          // Text avoidance
+          // -----------------------------
+
+          const textInfluence =
+            getTextInfluence(
+              baseX,
+              baseY
+            );
+
+          // Push ASCII away vertically
+          let offsetX = 0;
+          let offsetY = 0;
+
+          if (textInfluence > 0) {
+            offsetY =
+              Math.sin(
+                baseX * 0.03 +
+                  time
+              ) *
+              textInfluence *
+              25;
+
+            offsetX =
+              Math.cos(
+                baseY * 0.03 +
+                  time
+              ) *
+              textInfluence *
+              20;
+
+            // Also reduce visibility
+            wave *=
+              1 -
+              textInfluence * 0.85;
           }
 
-          let wave = Math.sin(
-            x * 0.18 + time
-          );
+          // -----------------------------
+          // Mouse swish
+          // -----------------------------
 
-          wave += Math.sin(
-            y * 0.13 - time * 1.3
-          );
+          const dx =
+            baseX - mouse.x;
 
-          wave += Math.sin(
-            (x + y) * 0.08 + time * 0.7
-          );
+          const dy =
+            baseY - mouse.y;
 
-          wave = (wave + 3) / 6;
+          const distance =
+            Math.sqrt(
+              dx * dx +
+                dy * dy
+            );
 
-          /*
-           * Mouse interaction
-           */
-          const dx = px - mouse.x;
-          const dy = py - mouse.y;
-
-          const distance = Math.sqrt(
-            dx * dx + dy * dy
-          );
-
-          if (distance < MOUSE_RADIUS) {
+          if (
+            distance <
+            MOUSE_RADIUS
+          ) {
             const influence =
-              1 - distance / MOUSE_RADIUS;
+              1 -
+              distance /
+                MOUSE_RADIUS;
+
+            const angle =
+              Math.atan2(
+                dy,
+                dx
+              );
+
+            offsetX +=
+              Math.cos(angle) *
+              influence *
+              30;
+
+            offsetY +=
+              Math.sin(angle) *
+              influence *
+              30;
 
             wave +=
               Math.sin(
-                distance * 0.08 -
+                distance *
+                  0.08 -
                   time * 5
               ) *
               influence *
@@ -130,39 +293,58 @@ const AsciiBackground = () => {
 
           wave = Math.max(
             0,
-            Math.min(1, wave)
+            Math.min(
+              1,
+              wave
+            )
           );
+
+          // -----------------------------
+          // Character
+          // -----------------------------
 
           const index = Math.floor(
-            wave * (CHARACTERS.length - 1)
+            wave *
+              (CHARACTERS.length - 1)
           );
 
-          const char = CHARACTERS[index];
+          const char =
+            CHARACTERS[index];
 
-          if (wave > 0.35) {
+          if (
+            wave > 0.28 &&
+            char !== " "
+          ) {
             const opacity =
-              0.08 + wave * 0.25;
+              0.08 +
+              wave * 0.35;
 
-            ctx.fillStyle = `rgba(255,255,255,${opacity})`;
+            ctx.fillStyle =
+              `rgba(255,255,255,${opacity})`;
 
-            const offsetY =
+            const naturalOffset =
               Math.sin(
-                x * 0.15 + time
+                column * 0.15 +
+                  time
               ) *
               5 *
               wave;
 
             ctx.fillText(
               char,
-              px,
-              py + offsetY
+              baseX + offsetX,
+              baseY +
+                naturalOffset +
+                offsetY
             );
           }
         }
       }
 
       animationFrame =
-        requestAnimationFrame(animate);
+        requestAnimationFrame(
+          animate
+        );
     };
 
     resize();
@@ -175,6 +357,11 @@ const AsciiBackground = () => {
     window.addEventListener(
       "mousemove",
       handleMouseMove
+    );
+
+    window.addEventListener(
+      "scroll",
+      updateTextRects
     );
 
     animate();
@@ -190,6 +377,11 @@ const AsciiBackground = () => {
         handleMouseMove
       );
 
+      window.removeEventListener(
+        "scroll",
+        updateTextRects
+      );
+
       cancelAnimationFrame(
         animationFrame
       );
@@ -199,10 +391,8 @@ const AsciiBackground = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-0 h-full w-full"
+      className="pointer-events-none fixed left-0 top-0 z-0"
       aria-hidden="true"
     />
   );
-};
-
-export default AsciiBackground;
+}

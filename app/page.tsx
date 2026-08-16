@@ -1,28 +1,28 @@
 import Navbar from "@/app/components/navbar/Navbar";
 import SearchBar from "@/app/components/search/SearchBar";
-import AsciiMouse from "@/app/components/background/AsciiBackground";
+import AsciiBackground from "@/app/components/background/AsciiBackground";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen">
-      <AsciiMouse />
+    <main className="relative min-h-screen overflow-hidden">
+      <AsciiBackground />
 
-      <div className="relative z-10">
-        <Navbar />
-
-        <section className="mx-auto flex max-w-7xl flex-col items-center px-6 py-16">
-          <h1 className="text-4xl font-bold tracking-tight">
+      <div className="relative z-10 flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1
+            data-ascii-text
+            className="text-6xl font-bold"
+          >
             GitHub Dashboard
           </h1>
 
-          <p className="mt-3 text-center text-sm text-white/50">
-            Search a GitHub user and explore their developer profile.
+          <p
+            data-ascii-text
+            className="mt-4 text-white/50"
+          >
+            Explore GitHub profiles
           </p>
-
-          <div className="mt-8 flex w-full justify-center">
-            <SearchBar />
-          </div>
-        </section>
+        </div>
       </div>
     </main>
   );
