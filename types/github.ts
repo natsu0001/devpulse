@@ -21,3 +21,8 @@ export type Repository = {
   updatedAt: string;
   isPrivate: boolean;
 };
+
+export type GitHubDashboardData = {
+  user: GitHubUser;
+  repositories: Repository[];
+};
