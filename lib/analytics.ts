@@ -33,7 +33,7 @@ export function calculateAnalytics(
         (a, b) =>
           b.stars - a.stars
       )
-      .slice(0, 5);
+      .slice(0, 6);
 
   const languageCounts: Record<
     string,
