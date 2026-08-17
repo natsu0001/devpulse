@@ -154,8 +154,7 @@ export async function GET(
             repository.description ??
             "No description provided.",
           language:
-            repository.language ??
-            "Unknown",
+            repository.language ?? "",
           stars:
             repository.stargazers_count,
           forks:

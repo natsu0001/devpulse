@@ -36,10 +36,12 @@ const RepositoryCard = ({
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-5 text-xs text-text-muted">
-        <span className="flex items-center gap-2">
-          <span className="h-2 w-2 bg-white/70" />
-          {repository.language}
-        </span>
+        {repository.language && (
+  <span className="flex items-center gap-2">
+    <span className="h-2 w-2 bg-white/70" />
+    {repository.language}
+  </span>
+)}
 
         <span>
           ★{" "}

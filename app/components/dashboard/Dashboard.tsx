@@ -15,11 +15,16 @@ type DashboardProps = {
 const Dashboard = ({
   data,
 }: DashboardProps) => {
-  const { user, repositories, analytics } =
-    data;
+  const {
+    user,
+    analytics,
+  } = data;
 
   return (
     <section className="mx-auto w-full max-w-7xl px-6 pb-16">
+
+      {/* Header */}
+
       <div className="mb-8">
         <p className="text-sm text-text-muted">
           Developer Analytics
@@ -33,77 +38,96 @@ const Dashboard = ({
         </h2>
       </div>
 
+      {/* Profile */}
+
       <ProfileHeader user={user} />
 
+      {/* Stats */}
+
       <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-  <StatsCard
-    label="Repositories"
-    value={user.repositories.toLocaleString()}
-    description="Public repositories"
-  />
 
-  <StatsCard
-    label="Total Stars"
-    value={analytics.totalStars.toLocaleString()}
-    description="Across repositories"
-  />
+        <StatsCard
+          label="Repositories"
+          value={user.repositories.toLocaleString()}
+          description="Public repositories"
+        />
 
-  <StatsCard
-    label="Total Forks"
-    value={analytics.totalForks.toLocaleString()}
-    description="Across repositories"
-  />
+        <StatsCard
+          label="Total Stars"
+          value={analytics.totalStars.toLocaleString()}
+          description="Across repositories"
+        />
 
-  <StatsCard
-    label="Avg. Stars"
-    value={analytics.averageStars.toLocaleString()}
-    description="Per repository"
-  />
-</div>
+        <StatsCard
+          label="Total Forks"
+          value={analytics.totalForks.toLocaleString()}
+          description="Across repositories"
+        />
+
+        <StatsCard
+          label="Avg. Stars"
+          value={analytics.averageStars.toLocaleString()}
+          description="Per repository"
+        />
+
+      </div>
+
+      {/* Charts */}
 
       <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border lg:grid-cols-2">
+
         <div className="min-h-80 bg-surface p-6">
           <LanguageChart
-  languages={analytics.languages}
-/>
+            languages={analytics.languages}
+          />
         </div>
 
         <div className="min-h-80 bg-surface p-6">
           <ActivityChart />
         </div>
+
       </div>
 
-<div className="mt-10">
-  <div className="mb-5 flex items-end justify-between">
-    <div>
-      <p className="text-sm text-text-muted">
-        Analytics
-      </p>
+      {/* Popular repositories */}
 
-      <h2
-        data-ascii-text
-        className="mt-1 text-xl font-semibold"
-      >
-        Most Popular
-      </h2>
-    </div>
+      <div className="mt-10">
 
-    <span className="text-xs text-text-muted">
-      By stars
-    </span>
-  </div>
+        <div className="mb-5 flex items-end justify-between">
 
-  <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
-    {analytics.popularRepositories.map(
-      (repository) => (
-        <RepositoryCard
-          key={repository.id}
-          repository={repository}
-        />
-      )
-    )}
-  </div>
-</div>
+          <div>
+            <p className="text-sm text-text-muted">
+              Analytics
+            </p>
+
+            <h2
+              data-ascii-text
+              className="mt-1 text-xl font-semibold"
+            >
+              Most Popular
+            </h2>
+          </div>
+
+          <span className="text-xs text-text-muted">
+            By stars
+          </span>
+
+        </div>
+
+        <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
+
+          {analytics.popularRepositories.map(
+            (repository) => (
+              <RepositoryCard
+                key={repository.id}
+                repository={repository}
+              />
+            )
+          )}
+
+        </div>
+
+      </div>
+
     </section>
   );
 };
