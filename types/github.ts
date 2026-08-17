@@ -42,4 +42,15 @@ export type GitHubDashboardData = {
   user: GitHubUser;
   repositories: Repository[];
   analytics: GitHubAnalytics;
+  activity: GitHubActivity;
+};
+
+export type ActivityDay = {
+  date: string;
+  count: number;
+};
+
+export type GitHubActivity = {
+  totalEvents: number;
+  days: ActivityDay[];
 };
