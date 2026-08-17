@@ -18,6 +18,7 @@ const Dashboard = ({
   const {
     user,
     analytics,
+    activity,
   } = data;
 
   return (
@@ -83,7 +84,9 @@ const Dashboard = ({
         </div>
 
         <div className="min-h-80 bg-surface p-6">
-          <ActivityChart />
+          <ActivityChart
+             activity={activity}
+           />
         </div>
 
       </div>
