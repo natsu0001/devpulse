@@ -1,34 +1,79 @@
-import NavLink from "./NavLink";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NAV_LINKS = [
+  {
+    label: "Dashboard",
+    href: "/",
+  },
+  {
+    label: "Compare",
+    href: "/compare",
+  },
+  {
+    label: "Repositories",
+    href: "/repositories",
+  },
+];
 
 const Navbar = () => {
+  const pathname = usePathname();
+
   return (
-    <nav className="diagonal-bg border-b border-white/10">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+    <header className="sticky top-0 z-50 border-b border-border diagonal-bg-subtle backdrop-blur-sm">
+      <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6">
 
-        <h1 data-ascii-text className="text-lg font-semibold tracking-tight">
-          GitScope
-        </h1>
+        {/* Logo */}
 
-        <div data-ascii-text className="flex items-center gap-8">
-          <NavLink href="#" active>
-            Dashboard
-          </NavLink>
+        <Link
+          href="/"
+          className="text-sm font-semibold tracking-tight text-white transition-opacity hover:opacity-70"
+        >
+          DEVPULSE
+        </Link>
 
-          <NavLink href="#">
-            Repositories
-          </NavLink>
+        {/* Navigation */}
 
-          <NavLink href="#">
-            Analytics
-          </NavLink>
+        <div className="hidden items-center gap-1 md:flex">
+
+          {NAV_LINKS.map((link) => {
+            const isActive =
+              pathname === link.href;
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`
+                  border px-4 py-2 text-sm
+                  transition-colors duration-200
+                  ${
+                    isActive
+                      ? "border-border bg-surface text-white"
+                      : "border-transparent text-text-muted hover:border-border hover:text-white"
+                  }
+                `}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+
         </div>
 
-        <button data-ascii-text className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10">
-          GitHub
-        </button>
+        {/* Search shortcut */}
 
-      </div>
-    </nav>
+        <Link
+          href="/"
+          className="hidden border border-border bg-background px-3 py-2 text-xs text-text-muted transition-colors hover:border-white/30 hover:text-white sm:block"
+        >
+          SEARCH
+        </Link>
+
+      </nav>
+    </header>
   );
 };
 
