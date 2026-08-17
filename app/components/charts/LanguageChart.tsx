@@ -1,5 +1,15 @@
 "use client";
 
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
 import type {
   LanguageStat,
 } from "@/types/github";
@@ -11,51 +21,97 @@ type LanguageChartProps = {
 const LanguageChart = ({
   languages,
 }: LanguageChartProps) => {
+  const data = languages.slice(0, 6);
+
   return (
-    <div>
+    <div className="h-full">
       <div className="mb-8">
         <p className="text-sm text-text-muted">
           Languages
         </p>
 
-        <p
+        <h3
           data-ascii-text
-          className="mt-1 text-2xl font-semibold"
+          className="mt-1 text-xl font-semibold"
         >
-          Code distribution
-        </p>
+          Repository distribution
+        </h3>
       </div>
 
-      {languages.length === 0 ? (
-        <p className="text-sm text-text-muted">
+      {data.length === 0 ? (
+        <div className="flex h-64 items-center justify-center border border-dashed border-border text-sm text-text-muted">
           No language data available.
-        </p>
+        </div>
       ) : (
-        <div className="space-y-5">
-          {languages
-            .slice(0, 5)
-            .map((language) => (
-              <div key={language.name}>
-                <div className="mb-2 flex items-center justify-between text-xs">
-                  <span className="text-text-secondary">
-                    {language.name}
-                  </span>
+        <div className="h-64 w-full">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+          >
+            <BarChart
+              data={data}
+              layout="vertical"
+              margin={{
+                top: 0,
+                right: 20,
+                left: 10,
+                bottom: 0,
+              }}
+            >
+              <CartesianGrid
+                stroke="rgba(255,255,255,0.08)"
+                horizontal={false}
+              />
 
-                  <span className="text-text-muted">
-                    {language.percentage}%
-                  </span>
-                </div>
+              <XAxis
+                type="number"
+                stroke="rgba(255,255,255,0.4)"
+                tick={{
+                  fill: "rgba(255,255,255,0.5)",
+                  fontSize: 11,
+                }}
+                allowDecimals={false}
+              />
 
-                <div className="h-1 w-full bg-border">
-                  <div
-                    className="h-full bg-white"
-                    style={{
-                      width: `${language.percentage}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+              <YAxis
+                type="category"
+                dataKey="name"
+                width={80}
+                stroke="rgba(255,255,255,0.4)"
+                tick={{
+                  fill: "rgba(255,255,255,0.7)",
+                  fontSize: 11,
+                }}
+              />
+
+              <Tooltip
+                cursor={{
+                  fill: "rgba(255,255,255,0.04)",
+                }}
+                contentStyle={{
+                  background: "#0a0a0a",
+                  border:
+                    "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: 0,
+                  color: "#fff",
+                }}
+                formatter={(
+                  value,
+                  name
+                ) => [
+                  `${value} repositories`,
+                  "Count",
+                ]}
+              />
+
+              <Bar
+                dataKey="count"
+                fill="#ffffff"
+                radius={0}
+                barSize={18}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
     </div>
