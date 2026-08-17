@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 
 import { calculateAnalytics } from "@/lib/analytics";
 
+import { calculateActivity } from "@/lib/activity";
+
 const GITHUB_API = "https://api.github.com";
 
 const headers = {
@@ -124,6 +126,41 @@ export async function GET(
       page++;
     }
 
+
+    // -------------------------
+    // ACTIVITY 
+    // -------------------------
+
+    const eventsResponse = await fetch(
+  `${GITHUB_API}/users/${encodeURIComponent(
+    username
+  )}/events/public?per_page=100`,
+  {
+    headers,
+    next: {
+      revalidate: 60,
+    },
+  }
+);
+
+if (!eventsResponse.ok) {
+  return NextResponse.json(
+    {
+      message:
+        "Could not load GitHub activity",
+    },
+    {
+      status:
+        eventsResponse.status,
+    }
+  );
+}
+
+const events =
+  await eventsResponse.json();
+
+  const activity = calculateActivity(events);
+
     // -------------------------
     // NORMALIZE USER
     // -------------------------
@@ -180,6 +217,7 @@ export async function GET(
       repositories:
         normalizedRepositories,
       analytics,
+      activity,
     });
   } catch (error) {
     console.error(
