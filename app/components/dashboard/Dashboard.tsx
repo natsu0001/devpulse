@@ -73,37 +73,37 @@ const Dashboard = ({
         </div>
       </div>
 
-      <div className="mt-10">
-        <div className="mb-5 flex items-end justify-between">
-          <div>
-            <p className="text-sm text-text-muted">
-              Projects
-            </p>
+<div className="mt-10">
+  <div className="mb-5 flex items-end justify-between">
+    <div>
+      <p className="text-sm text-text-muted">
+        Analytics
+      </p>
 
-            <h2
-              data-ascii-text
-              className="mt-1 text-xl font-semibold"
-            >
-              Repositories
-            </h2>
-          </div>
+      <h2
+        data-ascii-text
+        className="mt-1 text-xl font-semibold"
+      >
+        Most Popular
+      </h2>
+    </div>
 
-          <span className="text-xs text-text-muted">
-            {repositories.length} shown
-          </span>
-        </div>
+    <span className="text-xs text-text-muted">
+      By stars
+    </span>
+  </div>
 
-        <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
-          {repositories.map(
-            (repository) => (
-              <RepositoryCard
-                key={repository.id}
-                repository={repository}
-              />
-            )
-          )}
-        </div>
-      </div>
+  <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
+    {analytics.popularRepositories.map(
+      (repository) => (
+        <RepositoryCard
+          key={repository.id}
+          repository={repository}
+        />
+      )
+    )}
+  </div>
+</div>
     </section>
   );
 };
