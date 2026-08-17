@@ -13,18 +13,23 @@ import type {
 } from "@/types/github";
 
 type ActivityChartProps = {
-  activity: GitHubActivity;
+  activity?: GitHubActivity;
 };
 
 const ActivityChart = ({
   activity,
 }: ActivityChartProps) => {
   const data =
-    activity.days.slice(-30);
+    activity?.days?.slice(-30) ?? [];
+
+  const totalEvents =
+    activity?.totalEvents ?? 0;
 
   return (
     <div className="h-full">
+
       <div className="mb-8 flex items-end justify-between">
+
         <div>
           <p className="text-sm text-text-muted">
             Activity
@@ -39,8 +44,9 @@ const ActivityChart = ({
         </div>
 
         <span className="text-xs text-text-muted">
-          {activity.totalEvents} events
+          {totalEvents} events
         </span>
+
       </div>
 
       {data.length === 0 ? (
@@ -49,6 +55,7 @@ const ActivityChart = ({
         </div>
       ) : (
         <div className="h-64 w-full">
+
           <ResponsiveContainer
             width="100%"
             height="100%"
@@ -62,6 +69,7 @@ const ActivityChart = ({
                 bottom: 0,
               }}
             >
+
               <XAxis
                 dataKey="date"
                 stroke="rgba(255,255,255,0.35)"
@@ -79,8 +87,7 @@ const ActivityChart = ({
                   fill: "rgba(255,255,255,0.04)",
                 }}
                 contentStyle={{
-                  background:
-                    "#0a0a0a",
+                  background: "#0a0a0a",
                   border:
                     "1px solid rgba(255,255,255,0.12)",
                   borderRadius: 0,
@@ -88,10 +95,6 @@ const ActivityChart = ({
                 labelStyle={{
                   color: "#ffffff",
                 }}
-                formatter={(value) => [
-                  `${value} events`,
-                  "Activity",
-                ]}
               />
 
               <Bar
@@ -100,10 +103,13 @@ const ActivityChart = ({
                 radius={0}
                 barSize={8}
               />
+
             </BarChart>
           </ResponsiveContainer>
+
         </div>
       )}
+
     </div>
   );
 };
