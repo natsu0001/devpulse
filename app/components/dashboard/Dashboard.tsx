@@ -36,30 +36,30 @@ const Dashboard = ({
       <ProfileHeader user={user} />
 
       <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-<StatsCard
-  label="Repositories"
-  value={user.repositories}
-  description="Public repositories"
-/>
+  <StatsCard
+    label="Repositories"
+    value={user.repositories.toLocaleString()}
+    description="Public repositories"
+  />
 
-<StatsCard
-  label="Total Stars"
-  value={analytics.totalStars.toLocaleString()}
-  description="Across repositories"
-/>
+  <StatsCard
+    label="Total Stars"
+    value={analytics.totalStars.toLocaleString()}
+    description="Across repositories"
+  />
 
-<StatsCard
-  label="Total Forks"
-  value={analytics.totalForks.toLocaleString()}
-  description="Across repositories"
-/>
+  <StatsCard
+    label="Total Forks"
+    value={analytics.totalForks.toLocaleString()}
+    description="Across repositories"
+  />
 
-<StatsCard
-  label="Avg. Stars"
-  value={analytics.averageStars.toLocaleString()}
-  description="Per repository"
-/>
-      </div>
+  <StatsCard
+    label="Avg. Stars"
+    value={analytics.averageStars.toLocaleString()}
+    description="Per repository"
+  />
+</div>
 
       <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border lg:grid-cols-2">
         <div className="min-h-80 bg-surface p-6">

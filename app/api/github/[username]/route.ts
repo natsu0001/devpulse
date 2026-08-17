@@ -138,7 +138,7 @@ export async function GET(
       repositories: user.public_repos,
       followers: user.followers,
       following: user.following,
-      contributions: 0,
+    
     };
 
     // -------------------------
