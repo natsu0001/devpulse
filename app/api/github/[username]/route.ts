@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+
 import { calculateAnalytics } from "@/lib/analytics";
+
 const GITHUB_API = "https://api.github.com";
 
 const headers = {
@@ -22,19 +24,19 @@ export async function GET(
       {
         message: "Username is required",
       },
-      {
-        status: 400,
-      }
+      { status: 400 }
     );
   }
 
   try {
     // -------------------------
-    // Get user
+    // USER
     // -------------------------
 
     const userResponse = await fetch(
-      `${GITHUB_API}/users/${encodeURIComponent(username)}`,
+      `${GITHUB_API}/users/${encodeURIComponent(
+        username
+      )}`,
       {
         headers,
         next: {
@@ -48,19 +50,19 @@ export async function GET(
         {
           message: "GitHub user not found",
         },
-        {
-          status: 404,
-        }
+        { status: 404 }
       );
     }
 
     if (!userResponse.ok) {
       return NextResponse.json(
         {
-          message: "GitHub API request failed",
+          message:
+            "GitHub API request failed",
         },
         {
-          status: userResponse.status,
+          status:
+            userResponse.status,
         }
       );
     }
@@ -68,40 +70,62 @@ export async function GET(
     const user = await userResponse.json();
 
     // -------------------------
-    // Get repositories
+    // REPOSITORIES
     // -------------------------
 
-    const repositoriesResponse =
-      await fetch(
-        `${GITHUB_API}/users/${encodeURIComponent(
-          username
-        )}/repos?per_page=10&sort=updated`,
-        {
-          headers,
-          next: {
-            revalidate: 60,
+    const repositories = [];
+
+    const perPage = 100;
+
+    let page = 1;
+
+    while (true) {
+      const repositoriesResponse =
+        await fetch(
+          `${GITHUB_API}/users/${encodeURIComponent(
+            username
+          )}/repos?per_page=${perPage}&page=${page}&sort=updated`,
+          {
+            headers,
+            next: {
+              revalidate: 60,
+            },
+          }
+        );
+
+      if (!repositoriesResponse.ok) {
+        return NextResponse.json(
+          {
+            message:
+              "Could not load repositories",
           },
-        }
+          {
+            status:
+              repositoriesResponse.status,
+          }
+        );
+      }
+
+      const pageRepositories =
+        await repositoriesResponse.json();
+
+      repositories.push(
+        ...pageRepositories
       );
 
-    if (!repositoriesResponse.ok) {
-      return NextResponse.json(
-        {
-          message:
-            "Could not load repositories",
-        },
-        {
-          status:
-            repositoriesResponse.status,
-        }
-      );
+      // No more pages
+      if (
+        pageRepositories.length <
+        perPage
+      ) {
+        break;
+      }
+
+      page++;
     }
 
-    const repositories =
-      await repositoriesResponse.json();
-
     // -------------------------
-    // Normalize user
+    // NORMALIZE USER
     // -------------------------
 
     const normalizedUser = {
@@ -118,7 +142,7 @@ export async function GET(
     };
 
     // -------------------------
-    // Normalize repositories
+    // NORMALIZE REPOSITORIES
     // -------------------------
 
     const normalizedRepositories =
@@ -143,10 +167,14 @@ export async function GET(
         })
       );
 
-      const analytics =
-  calculateAnalytics(
-    normalizedRepositories
-  );
+    // -------------------------
+    // ANALYTICS
+    // -------------------------
+
+    const analytics =
+      calculateAnalytics(
+        normalizedRepositories
+      );
 
     return NextResponse.json({
       user: normalizedUser,
