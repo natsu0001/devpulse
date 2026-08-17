@@ -63,7 +63,9 @@ const Dashboard = ({
 
       <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border lg:grid-cols-2">
         <div className="min-h-80 bg-surface p-6">
-          <LanguageChart />
+          <LanguageChart
+  languages={analytics.languages}
+/>
         </div>
 
         <div className="min-h-80 bg-surface p-6">
