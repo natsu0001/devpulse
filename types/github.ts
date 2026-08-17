@@ -1,3 +1,5 @@
+
+
 export type GitHubUser = {
   username: string;
   name: string;
@@ -22,7 +24,22 @@ export type Repository = {
   isPrivate: boolean;
 };
 
+export type LanguageStat = {
+  name: string;
+  count: number;
+  percentage: number;
+};
+
+export type GitHubAnalytics = {
+  totalStars: number;
+  totalForks: number;
+  averageStars: number;
+  popularRepositories: Repository[];
+  languages: LanguageStat[];
+};
+
 export type GitHubDashboardData = {
   user: GitHubUser;
   repositories: Repository[];
+  analytics: GitHubAnalytics;
 };

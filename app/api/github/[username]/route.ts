@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-
+import { calculateAnalytics } from "@/lib/analytics";
 const GITHUB_API = "https://api.github.com";
 
 const headers = {
@@ -143,10 +143,16 @@ export async function GET(
         })
       );
 
+      const analytics =
+  calculateAnalytics(
+    normalizedRepositories
+  );
+
     return NextResponse.json({
       user: normalizedUser,
       repositories:
         normalizedRepositories,
+      analytics,
     });
   } catch (error) {
     console.error(

@@ -1,45 +1,23 @@
-import type { Repository } from "@/types/github";
-
-export type LanguageStat = {
-  name: string;
-  count: number;
-  percentage: number;
-};
-
-export type GitHubAnalytics = {
-  totalStars: number;
-  totalForks: number;
-  averageStars: number;
-  popularRepositories: Repository[];
-  languages: LanguageStat[];
-};
+import type {
+  Repository,
+  GitHubAnalytics,
+  LanguageStat,
+} from "@/types/github";
 
 export function calculateAnalytics(
   repositories: Repository[]
 ): GitHubAnalytics {
-  // -------------------------
-  // Total stars
-  // -------------------------
-
   const totalStars = repositories.reduce(
     (total, repository) =>
       total + repository.stars,
     0
   );
 
-  // -------------------------
-  // Total forks
-  // -------------------------
-
   const totalForks = repositories.reduce(
     (total, repository) =>
       total + repository.forks,
     0
   );
-
-  // -------------------------
-  // Average stars
-  // -------------------------
 
   const averageStars =
     repositories.length > 0
@@ -49,10 +27,6 @@ export function calculateAnalytics(
         )
       : 0;
 
-  // -------------------------
-  // Most popular repositories
-  // -------------------------
-
   const popularRepositories =
     [...repositories]
       .sort(
@@ -61,10 +35,6 @@ export function calculateAnalytics(
       )
       .slice(0, 5);
 
-  // -------------------------
-  // Language counts
-  // -------------------------
-
   const languageCounts: Record<
     string,
     number
@@ -72,9 +42,7 @@ export function calculateAnalytics(
 
   repositories.forEach(
     (repository) => {
-      if (!repository.language) {
-        return;
-      }
+      if (!repository.language) return;
 
       languageCounts[
         repository.language
@@ -85,8 +53,10 @@ export function calculateAnalytics(
     }
   );
 
-  const totalLanguageRepositories =
-    Object.values(languageCounts).reduce(
+  const totalLanguages =
+    Object.values(
+      languageCounts
+    ).reduce(
       (total, count) =>
         total + count,
       0
@@ -98,11 +68,10 @@ export function calculateAnalytics(
         name,
         count,
         percentage:
-          totalLanguageRepositories >
-          0
+          totalLanguages > 0
             ? Math.round(
                 (count /
-                  totalLanguageRepositories) *
+                  totalLanguages) *
                   100
               )
             : 0,
