@@ -49,10 +49,14 @@ export async function GET(
 
     if (userResponse.status === 404) {
       return NextResponse.json(
-        {
-          message: "GitHub user not found",
-        },
-        { status: 404 }
+       {
+    error: "USER_NOT_FOUND",
+    message:
+      `GitHub user "${username}" was not found.`,
+  },
+  {
+    status: 404,
+  }
       );
     }
 
@@ -95,18 +99,34 @@ export async function GET(
           }
         );
 
-      if (!repositoriesResponse.ok) {
-        return NextResponse.json(
-          {
-            message:
-              "Could not load repositories",
-          },
-          {
-            status:
-              repositoriesResponse.status,
-          }
-        );
-      }
+     if (
+  repositoriesResponse.status === 403 ||
+  repositoriesResponse.status === 429
+) {
+  return NextResponse.json(
+    {
+      error: "RATE_LIMIT",
+      message:
+        "GitHub API rate limit has been reached. Please try again later.",
+    },
+    {
+      status: repositoriesResponse.status,
+    }
+  );
+}
+
+if (!repositoriesResponse.ok) {
+  return NextResponse.json(
+    {
+      error: "REPOSITORIES_ERROR",
+      message:
+        "Could not load GitHub repositories.",
+    },
+    {
+      status: repositoriesResponse.status,
+    }
+  );
+}
 
       const pageRepositories =
         await repositoriesResponse.json();
@@ -143,15 +163,31 @@ export async function GET(
   }
 );
 
+if (
+  eventsResponse.status === 403 ||
+  eventsResponse.status === 429
+) {
+  return NextResponse.json(
+    {
+      error: "RATE_LIMIT",
+      message:
+        "GitHub API rate limit has been reached. Please try again later.",
+    },
+    {
+      status: eventsResponse.status,
+    }
+  );
+}
+
 if (!eventsResponse.ok) {
   return NextResponse.json(
     {
+      error: "ACTIVITY_ERROR",
       message:
-        "Could not load GitHub activity",
+        "Could not load GitHub activity.",
     },
     {
-      status:
-        eventsResponse.status,
+      status: eventsResponse.status,
     }
   );
 }
@@ -175,6 +211,7 @@ const events =
       repositories: user.public_repos,
       followers: user.followers,
       following: user.following,
+      createdAt: user.created_at,
     
     };
 
@@ -227,8 +264,9 @@ const events =
 
     return NextResponse.json(
       {
+        error: "GITHUB_ERROR",
         message:
-          "Unable to connect to GitHub",
+          "GitHub could not process the request.",
       },
       {
         status: 500,

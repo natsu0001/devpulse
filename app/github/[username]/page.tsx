@@ -12,24 +12,33 @@ type GitHubPageProps = {
 async function getGitHubData(
   username: string
 ): Promise<GitHubDashboardData> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/github/${encodeURIComponent(username)}`,
-    {
-      cache: "no-store",
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/github/${encodeURIComponent(username)}`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    const body = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        body.message ||
+          "Failed to load GitHub data."
+      );
     }
-  );
 
-  if (response.status === 404) {
-    notFound();
-  }
+    return body;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
 
-  if (!response.ok) {
     throw new Error(
-      "Failed to fetch GitHub data"
+      "Unable to connect to GitHub."
     );
   }
-
-  return response.json();
 }
 
 const GitHubProfilePage = async ({
