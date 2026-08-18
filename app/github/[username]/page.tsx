@@ -9,36 +9,41 @@ type GitHubPageProps = {
   }>;
 };
 
+type GitHubApiError = {
+  error?: string;
+  message?: string;
+};
+
 async function getGitHubData(
   username: string
 ): Promise<GitHubDashboardData> {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/github/${encodeURIComponent(username)}`,
-      {
-        cache: "no-store",
-      }
-    );
-
-    const body = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        body.message ||
-          "Failed to load GitHub data."
-      );
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/github/${encodeURIComponent(username)}`,
+    {
+      cache: "no-store",
     }
+  );
 
-    return body;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
+  const body =
+    (await response.json()) as
+      | GitHubDashboardData
+      | GitHubApiError;
+
+  if (response.status === 404) {
+    notFound();
+  }
+
+  if (!response.ok) {
+    const errorBody =
+      body as GitHubApiError;
 
     throw new Error(
-      "Unable to connect to GitHub."
+      errorBody.message ??
+        "GitHub API request failed."
     );
   }
+
+  return body as GitHubDashboardData;
 }
 
 const GitHubProfilePage = async ({
@@ -46,7 +51,12 @@ const GitHubProfilePage = async ({
 }: GitHubPageProps) => {
   const { username } = await params;
 
-  const data = await getGitHubData(username);
+  if (!username.trim()) {
+    notFound();
+  }
+
+  const data =
+    await getGitHubData(username);
 
   return <Dashboard data={data} />;
 };
