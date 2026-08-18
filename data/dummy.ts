@@ -13,7 +13,7 @@ export const dummyUser: GitHubUser = {
   repositories: 68,
   followers: 235000,
   following: 0,
-  contributions: 1842,
+  
 };
 
 export const dummyRepositories: Repository[] = [
