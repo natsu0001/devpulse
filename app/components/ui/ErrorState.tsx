@@ -31,7 +31,7 @@ const ErrorState = ({
           <button
             type="button"
             onClick={onRetry}
-            className="mt-6 border border-border-strong px-5 py-2.5 text-sm transition-colors hover:bg-surface-hover"
+            className="mt-6 border border-border-strong px-5 py-2.5 text-sm transition-colors hover:bg-white hover:text-black"
           >
             Try again
           </button>
