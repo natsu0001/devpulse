@@ -65,12 +65,7 @@ const Navbar = () => {
 
         {/* Search shortcut */}
 
-        <Link
-          href="/"
-          className="hidden border border-border bg-background px-3 py-2 text-xs text-text-muted transition-colors hover:border-white/30 hover:text-white sm:block"
-        >
-          SEARCH
-        </Link>
+       
 
       </nav>
     </header>
