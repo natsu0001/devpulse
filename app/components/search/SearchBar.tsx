@@ -21,7 +21,15 @@ const SearchBar = () => {
     const value =
       username.trim();
 
-    if (!value) return;
+      const isValidUsername =
+            /^[a-zA-Z0-9-]+$/.test(value);
+
+    
+
+    if (!isValidUsername) {
+      // Handle invalid username case
+      return;
+    }
 
     router.push(
       `/github/${encodeURIComponent(value)}`
