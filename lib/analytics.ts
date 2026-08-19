@@ -19,13 +19,13 @@ export function calculateAnalytics(
     0
   );
 
-  const averageStars =
-    repositories.length > 0
-      ? Math.round(
-          totalStars /
-            repositories.length
-        )
-      : 0;
+ const averageStars =
+  repositories.length === 0
+    ? 0
+    : Math.round(
+        totalStars /
+          repositories.length
+      );
 
   const popularRepositories =
     [...repositories]
