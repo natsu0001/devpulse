@@ -13,12 +13,21 @@ const ErrorPage = ({
   error,
   reset,
 }: ErrorPageProps) => {
+  const isRateLimit =
+    error.message.toLowerCase().includes("rate limit");
+
   return (
     <ErrorState
-      title="Unable to load profile"
+      title={
+        isRateLimit
+          ? "GitHub rate limit reached"
+          : "Unable to load profile"
+      }
       message={
-        error.message ||
-        "We couldn't load the GitHub profile. Please try again."
+        isRateLimit
+          ? "GitHub has temporarily limited API requests. Please wait a little while and try again."
+          : error.message ||
+            "We couldn't load this GitHub profile. Please try again."
       }
       onRetry={reset}
     />
