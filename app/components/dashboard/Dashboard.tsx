@@ -116,18 +116,29 @@ const Dashboard = ({
 
         </div>
 
-        <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
+       <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
+  {analytics.popularRepositories.length > 0 ? (
+    analytics.popularRepositories.map(
+      (repository) => (
+        <RepositoryCard
+          key={repository.id}
+          repository={repository}
+        />
+      )
+    )
+  ) : (
+    <div className="bg-surface p-8 md:col-span-2">
+      <p className="text-sm font-medium">
+        No public repositories
+      </p>
 
-          {analytics.popularRepositories.map(
-            (repository) => (
-              <RepositoryCard
-                key={repository.id}
-                repository={repository}
-              />
-            )
-          )}
-
-        </div>
+      <p className="mt-2 text-sm text-text-muted">
+        This developer doesn't have any
+        public repositories to analyze.
+      </p>
+    </div>
+  )}
+</div>
 
       </div>
 
