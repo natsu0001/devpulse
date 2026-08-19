@@ -20,6 +20,34 @@ export async function GET(
   }
 ) {
   const { username } = await context.params;
+  const trimmedUsername =
+  username.trim();
+
+if (!trimmedUsername) {
+  return NextResponse.json(
+    {
+      error: "INVALID_USERNAME",
+      message:
+        "A GitHub username is required.",
+    },
+    { status: 400 }
+  );
+}
+
+if (
+  !/^[a-zA-Z0-9-]+$/.test(
+    trimmedUsername
+  )
+) {
+  return NextResponse.json(
+    {
+      error: "INVALID_USERNAME",
+      message:
+        "The GitHub username contains invalid characters.",
+    },
+    { status: 400 }
+  );
+}
 
   if (!username) {
     return NextResponse.json(
