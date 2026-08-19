@@ -8,6 +8,8 @@ import StatsCard from "./StatsCard";
 import RepositoryCard from "@/app/components/repositories/RepositoryCard";
 import LanguageChart from "@/app/components/charts/LanguageChart";
 import ActivityChart from "@/app/components/charts/ActivityChart";
+import RepositoryExplorer from "@/app/components/repositories/RepositoryExplorer";
+
 type DashboardProps = {
   data: GitHubDashboardData;
 };
@@ -18,6 +20,7 @@ const Dashboard = ({
   const {
     user,
     analytics,
+    repositories,
     activity,
   } = data;
 
@@ -94,53 +97,10 @@ const Dashboard = ({
       {/* Popular repositories */}
 
       <div className="mt-10">
-
-        <div className="mb-5 flex items-end justify-between">
-
-          <div>
-            <p className="text-sm text-text-muted">
-              Analytics
-            </p>
-
-            <h2
-              data-ascii-text
-              className="mt-1 text-xl font-semibold"
-            >
-              Most Popular
-            </h2>
-          </div>
-
-          <span className="text-xs text-text-muted">
-            By stars
-          </span>
-
-        </div>
-
-       <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
-  {analytics.popularRepositories.length > 0 ? (
-    analytics.popularRepositories.map(
-      (repository) => (
-        <RepositoryCard
-          key={repository.id}
-          repository={repository}
-        />
-      )
-    )
-  ) : (
-    <div className="bg-surface p-8 md:col-span-2">
-      <p className="text-sm font-medium">
-        No public repositories
-      </p>
-
-      <p className="mt-2 text-sm text-text-muted">
-        This developer doesn't have any
-        public repositories to analyze.
-      </p>
-    </div>
-  )}
+  <RepositoryExplorer
+    repositories={repositories}
+  />
 </div>
-
-      </div>
 
     </section>
   );
