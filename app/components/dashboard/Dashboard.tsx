@@ -12,6 +12,7 @@ import RepositoryExplorer from "@/app/components/repositories/RepositoryExplorer
 
 type DashboardProps = {
   data: GitHubDashboardData;
+  
 };
 
 const Dashboard = ({
@@ -46,11 +47,11 @@ const Dashboard = ({
 
       {/* Profile */}
 
-      <ProfileHeader user={user} />
+      <ProfileHeader user={user} accountAge={accountAge} />
 
       {/* Stats */}
 
-      <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
 
         <StatsCard
           label="Repositories"

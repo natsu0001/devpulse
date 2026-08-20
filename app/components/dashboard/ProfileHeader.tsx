@@ -2,10 +2,15 @@ import type { GitHubUser } from "@/types/github";
 
 type ProfileHeaderProps = {
   user: GitHubUser;
+  accountAge: {
+    years: number;
+    months: number;
+  };
 };
 
 const ProfileHeader = ({
   user,
+  accountAge,
 }: ProfileHeaderProps) => {
   return (
     <section className="border border-border bg-surface p-6">
@@ -20,6 +25,8 @@ const ProfileHeader = ({
           <p className="text-sm text-text-muted">
             @{user.username}
           </p>
+
+          
 
           <h2
             data-ascii-text
