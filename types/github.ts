@@ -10,6 +10,7 @@ export type GitHubUser = {
   repositories: number;
   followers: number;
   following: number;
+  createdAt: string;
   
 };
 
