@@ -4,7 +4,7 @@ import type {
 
 import ProfileHeader from "./ProfileHeader";
 import StatsCard from "./StatsCard";
-
+import { getAccountAge } from "@/lib/date";
 import RepositoryCard from "@/app/components/repositories/RepositoryCard";
 import LanguageChart from "@/app/components/charts/LanguageChart";
 import ActivityChart from "@/app/components/charts/ActivityChart";
@@ -23,6 +23,8 @@ const Dashboard = ({
     repositories,
     activity,
   } = data;
+  const accountAge =
+  getAccountAge(user.createdAt);
 
   return (
     <section className="mx-auto w-full max-w-7xl px-6 pb-16">
@@ -72,6 +74,11 @@ const Dashboard = ({
           label="Avg. Stars"
           value={analytics.averageStars.toLocaleString()}
           description="Per repository"
+        />
+        <StatsCard
+          label="Account Age"
+          value={`${accountAge.years}y ${accountAge.months}m`}
+          description="GitHub account"
         />
 
       </div>
