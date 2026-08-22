@@ -29,6 +29,7 @@ export type Repository = {
 };
 };
 
+
 export type LanguageStat = {
   name: string;
   count: number;
