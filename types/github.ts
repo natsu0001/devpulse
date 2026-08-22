@@ -23,6 +23,10 @@ export type Repository = {
   forks: number;
   updatedAt: string;
   isPrivate: boolean;
+  owner: {
+  username: string;
+  avatar: string;
+};
 };
 
 export type LanguageStat = {
