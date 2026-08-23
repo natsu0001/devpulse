@@ -139,16 +139,15 @@ const RepositoryExplorer = ({
       <div className="mb-5 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-[1fr_auto_auto]">
         {/* Search */}
 
-        <input
-          value={search}
-          onChange={(event) =>
-            setSearch(
-              event.target.value
-            )
-          }
-          placeholder="Search repositories..."
-          className="min-w-0 bg-surface px-4 py-3 text-sm text-white outline-none placeholder:text-text-muted"
-        />
+<input
+  type="search"
+  value={search}
+  onChange={(event) =>
+    setSearch(event.target.value)
+  }
+  placeholder="Search repositories..."
+  className="min-h-12 bg-surface px-4 text-sm text-white outline-none placeholder:text-text-muted"
+/>
 
         {/* Language */}
 

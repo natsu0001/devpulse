@@ -19,6 +19,9 @@ export async function GET(
   const sort =
     searchParams.get("sort") ?? "stars";
 
+    const language =
+  searchParams.get("language");
+
   const page = Math.max(
     Number(searchParams.get("page") ?? "1"),
     1
@@ -41,10 +44,16 @@ export async function GET(
         `${GITHUB_API}/search/repositories`
       );
 
-    githubUrl.searchParams.set(
-      "q",
-      query
-    );
+let githubQuery = query;
+
+if (language) {
+  githubQuery += ` language:${language}`;
+}
+
+githubUrl.searchParams.set(
+  "q",
+  githubQuery
+);
 
     githubUrl.searchParams.set(
       "sort",

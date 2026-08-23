@@ -40,63 +40,75 @@ const [error, setError] =
 const [sort, setSort] =
   useState("stars");
 
+  const [language, setLanguage] =
+  useState("all");
+
 const [page, setPage] =
   useState(1);
 
 const [total, setTotal] =
   useState(0);
 
-  const searchRepositories =
-  async (
-    requestedPage = 1
-  ) => {
-    const value =
-      query.trim();
+const searchRepositories = async (
+  requestedPage = 1,
+  requestedSort = sort,
+  requestedLanguage = language
+) => {
+  const value = query.trim();
 
-    if (!value) {
-      return;
+  if (!value) {
+    return;
+  }
+
+  try {
+    setLoading(true);
+    setError(null);
+
+    const params = new URLSearchParams();
+
+    params.set("q", value);
+    params.set("sort", requestedSort);
+    params.set(
+      "page",
+      String(requestedPage)
+    );
+
+    if (requestedLanguage !== "all") {
+      params.set(
+        "language",
+        requestedLanguage
+      );
     }
 
-    try {
-      setLoading(true);
-      setError(null);
+    const response = await fetch(
+      `/api/github/search?${params.toString()}`
+    );
 
-      const response =
-        await fetch(
-          `/api/github/search?q=${encodeURIComponent(
-            value
-          )}&sort=${sort}&page=${requestedPage}`
-        );
+    const data =
+      await response.json();
 
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ??
-            "Repository search failed."
-        );
-      }
-
-      setResults(
-        data.repositories
+    if (!response.ok) {
+      throw new Error(
+        data.message ??
+          "Repository search failed."
       );
-
-      setTotal(data.total);
-
-      setPage(requestedPage);
-    } catch (error) {
-      setResults([]);
-
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong."
-      );
-    } finally {
-      setLoading(false);
     }
-  };
+
+    setResults(data.repositories);
+    setTotal(data.total);
+    setPage(requestedPage);
+  } catch (error) {
+    setResults([]);
+
+    setError(
+      error instanceof Error
+        ? error.message
+        : "Something went wrong."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <main className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10">
       {/* Header */}
@@ -145,56 +157,89 @@ const [total, setTotal] =
 
       {/* Filters */}
       <div className="mt-6 grid grid-cols-1 gap-px border border-border bg-border sm:grid-cols-3">
-        <select
+<select
   value={sort}
   onChange={(event) => {
-    setSort(event.target.value);
+    const newSort = event.target.value;
+
+    setSort(newSort);
 
     if (query.trim()) {
-      setTimeout(() => {
-        searchRepositories(1);
-      }, 0);
+      searchRepositories(
+        1,
+        newSort,
+        language
+      );
     }
   }}
-          className="min-h-12 bg-surface px-4 text-sm text-white outline-none"
-        >
-          <option value="stars">
-            Most stars
-          </option>
+  className="min-h-12 bg-surface px-4 text-sm text-white outline-none"
+>
+  <option value="stars">
+    Most stars
+  </option>
 
-          <option value="forks">
-            Most forks
-          </option>
+  <option value="forks">
+    Most forks
+  </option>
 
-          <option value="updated">
-            Recently updated
-          </option>
-        </select>
+  <option value="updated">
+    Recently updated
+  </option>
+</select>
 
-        <select
-          defaultValue="all"
-          className="min-h-12 border-t border-border bg-surface px-4 text-sm text-white outline-none sm:border-l sm:border-t-0"
-        >
-          <option value="all">
-            All languages
-          </option>
+<select
+  value={language}
+  onChange={(event) => {
+    const newLanguage = event.target.value;
 
-          <option value="typescript">
-            TypeScript
-          </option>
+    setLanguage(newLanguage);
 
-          <option value="javascript">
-            JavaScript
-          </option>
+    if (query.trim()) {
+      searchRepositories(
+        1,
+        sort,
+        newLanguage
+      );
+    }
+  }}
+  className="min-h-12 border-t border-border bg-surface px-4 text-sm text-white outline-none sm:border-l sm:border-t-0"
+>
+  <option value="all">
+    All languages
+  </option>
 
-          <option value="python">
-            Python
-          </option>
+  <option value="typescript">
+    TypeScript
+  </option>
 
-          <option value="rust">
-            Rust
-          </option>
-        </select>
+  <option value="javascript">
+    JavaScript
+  </option>
+
+  <option value="python">
+    Python
+  </option>
+
+  <option value="rust">
+    Rust
+  </option>
+
+  <option value="go">
+    Go
+  </option>
+
+  <option value="java">
+    Java
+  </option>
+
+  <option value="c">
+    C
+  </option>
+
+  <option value="cpp">
+    C++
+  </option>
+</select>
 
         <div className="flex items-center bg-surface px-4">
           <span className="text-xs text-text-muted">
