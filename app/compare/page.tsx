@@ -208,18 +208,68 @@ const ComparisonResults = ({
   userA,
   userB,
 }: ComparisonResultsProps) => {
+  const languages = Array.from(
+    new Set([
+      ...userA.analytics.languages.map(
+        (language) => language.name
+      ),
+      ...userB.analytics.languages.map(
+        (language) => language.name
+      ),
+    ])
+  );
+
   return (
     <section className="mt-10">
       {/* Profiles */}
 
       <div className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
-        <DeveloperCard
-          data={userA}
-        />
+        <DeveloperCard data={userA} />
 
-        <DeveloperCard
-          data={userB}
-        />
+        <DeveloperCard data={userB} />
+      </div>
+
+      {/* Performance */}
+
+      <div className="mt-6 border border-border bg-surface p-6">
+        <div className="mb-6">
+          <p className="text-sm text-text-muted">
+            Performance
+          </p>
+
+          <h3
+            data-ascii-text
+            className="mt-1 text-lg font-semibold"
+          >
+            Developer Comparison
+          </h3>
+        </div>
+
+        <div className="space-y-6">
+          <ComparisonBar
+            label="Stars"
+            valueA={userA.analytics.totalStars}
+            valueB={userB.analytics.totalStars}
+          />
+
+          <ComparisonBar
+            label="Forks"
+            valueA={userA.analytics.totalForks}
+            valueB={userB.analytics.totalForks}
+          />
+
+          <ComparisonBar
+            label="Followers"
+            valueA={userA.user.followers}
+            valueB={userB.user.followers}
+          />
+
+          <ComparisonBar
+            label="Repositories"
+            valueA={userA.user.repositories}
+            valueB={userB.user.repositories}
+          />
+        </div>
       </div>
 
       {/* Stats */}
@@ -245,33 +295,105 @@ const ComparisonResults = ({
 
         <ComparisonRow
           label="Total Stars"
-          valueA={
-            userA.analytics.totalStars
-          }
-          valueB={
-            userB.analytics.totalStars
-          }
+          valueA={userA.analytics.totalStars}
+          valueB={userB.analytics.totalStars}
         />
 
         <ComparisonRow
           label="Total Forks"
-          valueA={
-            userA.analytics.totalForks
-          }
-          valueB={
-            userB.analytics.totalForks
-          }
+          valueA={userA.analytics.totalForks}
+          valueB={userB.analytics.totalForks}
         />
 
         <ComparisonRow
           label="Average Stars"
-          valueA={
-            userA.analytics.averageStars
-          }
-          valueB={
-            userB.analytics.averageStars
-          }
+          valueA={userA.analytics.averageStars}
+          valueB={userB.analytics.averageStars}
         />
+      </div>
+
+      {/* Languages */}
+
+      <div className="mt-6 border border-border bg-surface">
+        <div className="border-b border-border p-5">
+          <p className="text-sm text-text-muted">
+            Languages
+          </p>
+
+          <h3
+            data-ascii-text
+            className="mt-1 text-lg font-semibold"
+          >
+            Language Distribution
+          </h3>
+        </div>
+
+        <div className="divide-y divide-border">
+          {languages.map((language) => {
+            const languageA =
+              userA.analytics.languages.find(
+                (item) =>
+                  item.name === language
+              );
+
+            const languageB =
+              userB.analytics.languages.find(
+                (item) =>
+                  item.name === language
+              );
+
+            return (
+              <div
+                key={language}
+                className="grid grid-cols-3 gap-4 p-5"
+              >
+                {/* Developer A */}
+
+                <div>
+                  <p className="text-sm">
+                    {languageA
+                      ? `${languageA.percentage}%`
+                      : "—"}
+                  </p>
+
+                  <div className="mt-2 h-1 bg-border">
+                    <div
+                      className="h-full bg-white"
+                      style={{
+                        width: `${languageA?.percentage ?? 0}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Language */}
+
+                <div className="flex items-center justify-center text-xs uppercase tracking-wider text-text-muted">
+                  {language}
+                </div>
+
+                {/* Developer B */}
+
+                <div className="text-right">
+                  <p className="text-sm">
+                    {languageB
+                      ? `${languageB.percentage}%`
+                      : "—"}
+                  </p>
+
+                  <div className="mt-2 ml-auto h-1 bg-border">
+                    <div
+                      className="ml-auto h-full bg-white"
+                      style={{
+                        width: `${languageB?.percentage ?? 0}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -373,5 +495,61 @@ const ComparisonRow = ({
     </div>
   );
 };
+type ComparisonBarProps = {
+  label: string;
+  valueA: number;
+  valueB: number;
+};
 
+const ComparisonBar = ({
+  label,
+  valueA,
+  valueB,
+}: ComparisonBarProps) => {
+  const total = valueA + valueB;
+
+  const percentageA =
+    total === 0
+      ? 50
+      : (valueA / total) * 100;
+
+  const percentageB =
+    total === 0
+      ? 50
+      : (valueB / total) * 100;
+
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between text-xs">
+        <span className="text-text-muted">
+          {valueA.toLocaleString()}
+        </span>
+
+        <span className="uppercase tracking-wider text-text-muted">
+          {label}
+        </span>
+
+        <span className="text-text-muted">
+          {valueB.toLocaleString()}
+        </span>
+      </div>
+
+      <div className="flex h-2 w-full bg-border">
+        <div
+          className="bg-white"
+          style={{
+            width: `${percentageA}%`,
+          }}
+        />
+
+        <div
+          className="bg-text-muted"
+          style={{
+            width: `${percentageB}%`,
+          }}
+        />
+      </div>
+    </div>
+  );
+};
 export default ComparePage;
