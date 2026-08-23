@@ -326,17 +326,48 @@ const ComparisonRow = ({
   valueA,
   valueB,
 }: ComparisonRowProps) => {
+  const winner =
+    valueA > valueB
+      ? "a"
+      : valueB > valueA
+        ? "b"
+        : "tie";
+
   return (
     <div className="grid grid-cols-3 border-b border-border last:border-b-0">
-      <div className="bg-surface p-4 text-sm text-text-muted">
+      <div
+        className={`bg-surface p-4 text-sm ${
+          winner === "a"
+            ? "font-semibold text-white"
+            : "text-text-muted"
+        }`}
+      >
         {valueA.toLocaleString()}
+
+        {winner === "a" && (
+          <span className="ml-2 text-xs text-text-muted">
+            WIN
+          </span>
+        )}
       </div>
 
       <div className="flex items-center justify-center bg-surface p-4 text-xs font-medium uppercase tracking-wider text-text-muted">
         {label}
       </div>
 
-      <div className="bg-surface p-4 text-right text-sm text-text-muted">
+      <div
+        className={`bg-surface p-4 text-right text-sm ${
+          winner === "b"
+            ? "font-semibold text-white"
+            : "text-text-muted"
+        }`}
+      >
+        {winner === "b" && (
+          <span className="mr-2 text-xs text-text-muted">
+            WIN
+          </span>
+        )}
+
         {valueB.toLocaleString()}
       </div>
     </div>
