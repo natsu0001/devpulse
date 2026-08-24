@@ -308,6 +308,61 @@ const searchRepositories = async (
     </>
   )}
 
+
+<div className="mt-6 flex items-center justify-between border border-border bg-surface p-4">
+  <button
+    type="button"
+    disabled={page === 1 || loading}
+    onClick={() =>
+      searchRepositories(page - 1)
+    }
+    className="
+      border border-border-strong
+      px-4 py-2
+      text-sm
+      transition-colors
+      hover:bg-surface-hover
+      disabled:cursor-not-allowed
+      disabled:opacity-40
+    "
+  >
+    Previous
+  </button>
+
+  <div className="text-center">
+    <p className="text-sm">
+      Page {page}
+    </p>
+
+    <p className="mt-1 text-xs text-text-muted">
+      Showing {results.length} results
+    </p>
+  </div>
+
+  <button
+    type="button"
+    disabled={
+      results.length < 20 ||
+      loading
+    }
+    onClick={() =>
+      searchRepositories(page + 1)
+    }
+    className="
+      border border-border-strong
+      px-4 py-2
+      text-sm
+      transition-colors
+      hover:bg-surface-hover
+      disabled:cursor-not-allowed
+      disabled:opacity-40
+    "
+  >
+    Next
+  </button>
+</div>
+
+
 {!loading &&
   !error &&
   query &&
