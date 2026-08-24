@@ -457,6 +457,8 @@ const ComparisonRow = ({
 
   return (
     <div className="grid grid-cols-3 border-b border-border last:border-b-0">
+      {/* Developer A */}
+
       <div
         className={`bg-surface p-4 text-sm ${
           winner === "a"
@@ -467,15 +469,19 @@ const ComparisonRow = ({
         {valueA.toLocaleString()}
 
         {winner === "a" && (
-          <span className="ml-2 text-xs text-text-muted">
+          <span className="ml-2 text-[10px] tracking-wider text-text-muted">
             WIN
           </span>
         )}
       </div>
 
-      <div className="flex items-center justify-center bg-surface p-4 text-xs font-medium uppercase tracking-wider text-text-muted">
+      {/* Metric */}
+
+      <div className="flex items-center justify-center bg-surface p-4 text-center text-[10px] font-medium uppercase tracking-wider text-text-muted">
         {label}
       </div>
+
+      {/* Developer B */}
 
       <div
         className={`bg-surface p-4 text-right text-sm ${
@@ -485,7 +491,7 @@ const ComparisonRow = ({
         }`}
       >
         {winner === "b" && (
-          <span className="mr-2 text-xs text-text-muted">
+          <span className="mr-2 text-[10px] tracking-wider text-text-muted">
             WIN
           </span>
         )}
