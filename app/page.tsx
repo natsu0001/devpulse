@@ -7,10 +7,10 @@ import SearchBar from "@/app/components/search/SearchBar";
 export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      <Background />
+      
 
       <div className="relative z-10">
-        <Navbar />
+        
 
         <section className="mx-auto flex min-h-[calc(100vh-73px)] w-full max-w-7xl flex-col items-center justify-center px-6 py-16">
           <div className="w-full max-w-2xl text-center">
