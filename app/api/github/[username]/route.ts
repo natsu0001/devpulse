@@ -247,26 +247,31 @@ const events =
     // NORMALIZE REPOSITORIES
     // -------------------------
 
-    const normalizedRepositories =
-      repositories.map(
-        (repository: any) => ({
-          id: repository.id,
-          name: repository.name,
-          description:
-            repository.description ??
-            "No description provided.",
-          language:
-            repository.language ?? "",
-          stars:
-            repository.stargazers_count,
-          forks:
-            repository.forks_count,
-          updatedAt:
-            repository.updated_at,
-          isPrivate:
-            repository.private,
-        })
-      );
+const normalizedRepositories =
+  repositories.map(
+    (repository: any) => ({
+      id: repository.id,
+      name: repository.name,
+      description:
+        repository.description ??
+        "No description provided.",
+      language:
+        repository.language ?? "",
+      stars:
+        repository.stargazers_count,
+      forks:
+        repository.forks_count,
+      updatedAt:
+        repository.updated_at,
+      isPrivate:
+        repository.private,
+
+      owner: {
+        username: repository.owner.login,
+        avatar: repository.owner.avatar_url,
+      },
+    })
+  );
 
     // -------------------------
     // ANALYTICS
