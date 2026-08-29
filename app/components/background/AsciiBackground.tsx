@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const CHARACTERS = " .·:•/|\\";
+const CHARACTERS = " .·•:/|\\";
 
 const CELL_SIZE = 18;
 const MOUSE_RADIUS = 220;
