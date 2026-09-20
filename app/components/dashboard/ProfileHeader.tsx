@@ -26,8 +26,6 @@ const ProfileHeader = ({
             @{user.username}
           </p>
 
-          
-
           <h2
             data-ascii-text
             className="mt-1 text-2xl font-semibold"
